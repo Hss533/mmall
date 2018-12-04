@@ -1,0 +1,26 @@
+*.class
+
+#配置包文件忽略
+*.war
+*.ear
+
+#maven 下文件忽略
+target/
+
+#idea配置忽略
+.idea/
+/idea/
+*.ipr
+*.iml
+*.iws
+
+#临时文件忽略
+*.log
+*.cache
+*.diff
+*.patch
+*.tmp
+
+#系统文件进行忽略
+.DS_Store
+Thumns.db
