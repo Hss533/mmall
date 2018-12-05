@@ -151,4 +151,35 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="checkUsername" resultType="int" parameterType="string">
+    select COUNT(1) from mmall_user WHERE  username=#{username}
+  </select>
+  <select id="checkEmail" resultType="int" parameterType="string">
+    select COUNT(1) from mmall_user WHERE  email=#{email}
+  </select>
+  <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
+   <!--select * 这样不好  要什么查什么才最好-->
+    SELECT  <include refid="Base_Column_List"/>  from mmall_user WHERE  username=#{username}
+    and password=#{password}
+  </select>
+  <select id="selectQuestionByUserName" resultType="string" parameterType="string">
+    select question FROM  mmall_user WHERE username=#{username};
+  </select>
+  <select id="checkAnswer" resultType="int" parameterType="string">
+    select count(1)  FROM mmall_user
+    WHERE username=#{username}
+    and question=#{question}
+    and answer=#{answer}
+  </select>
+  <update id="updatePasswordByUsername" parameterType="string" >
+    UPDATE mmall_user SET password=#{password} ,update_time=now() where username=#{username}
+  </update>
+  <select id="checkPassword" resultType="int" parameterType="map">
+<!--userId一定要加上，否者这个密码很容易被试出来-->
+    SELECT  COUNT(1) from mmall_user where id=#{userId} and password=#{password}
+
+  </select>
+  <select id="checkEmailByUserId" resultType="int" parameterType="string">
+    select COUNT(1) from WHERE  email=#{email} and id!=#{userId}
+  </select>
 </mapper>
