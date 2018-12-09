@@ -86,4 +86,24 @@ public class Category {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+    //重写hashcode方法
+    //equals比较返回true，hashcode值要返回相同。
+    //如果两个对象的hashcode相同，他们并不一定相同，
+    // 因为hashcode的判断条件没有equals多
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Category category = (Category) o;
+
+        return id != null ? id.equals(category.id) : category.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }

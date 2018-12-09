@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
@@ -28,7 +29,7 @@ public class UserController {
     //@ResponseBody是自动通过springmvc中的将返回值序列化成json
     @RequestMapping(value = "login.do",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<User> login(String username, String password, HttpSession session)
+    public ServerResponse<User> login(@RequestParam(value = "username",required = false) String username, String password, HttpSession session)
     {
        ServerResponse<User> response=iUserService.login(username,password);
        if(response.idSucsess())
@@ -147,8 +148,10 @@ public class UserController {
     {
         //如果调用这个接口用户没有登录  则强制登录
         User currentUser=(User) session.getAttribute(Const.CURRENT_USE);
+
         if(currentUser==null)
         {
+            System.out.println("asdsa");
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"未登录许需要强制登录status=10");
 
         }

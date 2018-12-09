@@ -1,6 +1,7 @@
 package com.mmall.service.impl;
 
 import com.mmall.common.Const;
+import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.common.TokenCache;
 import com.mmall.dao.UserMapper;
@@ -12,6 +13,7 @@ import jdk.nashorn.internal.parser.Token;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.util.UUID;
@@ -249,6 +251,35 @@ public class IUserServiceImpl implements IUserService
 
         user.setPassword(StringUtils.EMPTY);
         return ServerResponse.createBySuccess(user);
+
+    }
+
+    //后端
+    @Override
+    public ServerResponse isAdmin(User user) {
+        if(user.getRole()==Const.Role.ROLE_ADMIN&& user!=null)
+            return ServerResponse.createBySuccessMessage("是管理员");
+        else
+            return ServerResponse.createByErrorMessage("不是管理员");
+
+    }
+
+    @Override
+    public ServerResponse idAdminAndIsNotnull(User user) {
+
+        if(user!=null)
+        {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"未登录需要登录");
+        }
+        else {
+            if(user.getRole()==Const.Role.ROLE_ADMIN)
+            {
+                return ServerResponse.createBySuccess("可以");
+            }
+            else {
+                return ServerResponse.createByErrorMessage("没有管理员权限");
+            }
+        }
 
     }
 }
