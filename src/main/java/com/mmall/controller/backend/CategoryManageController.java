@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 商品类别管理
@@ -76,11 +77,18 @@ public class CategoryManageController {
                 else return response;//返回不是管理员
             }
         }
+
+        /**
+         * 根据id获取的是子节点的商品
+         * @param session
+         * @param categoryId
+         * @return
+         */
         @RequestMapping(value = "get_category.do",method = RequestMethod.POST)
         @ResponseBody
         public ServerResponse getChildParallelCategory(HttpSession session,@RequestParam(value = "categoryId",defaultValue = "0")Integer categoryId)
         {
-            User  currentUser=(User) session.getAttribute(Const.CURRENT_USE);
+            User currentUser=(User) session.getAttribute(Const.CURRENT_USE);
             if(currentUser==null)
             {
                 return  ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"未登录请登录");
@@ -97,6 +105,13 @@ public class CategoryManageController {
                 else return response;//返回不是管理员
             }
         }
+
+    /**
+     * 递归查询本节点和子节点的ID
+     * @param session
+     * @param categoryId
+     * @return
+     */
     @RequestMapping(value = "get_deep_category.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse getCategoryAndDeepChildrenCategory(HttpSession session,@RequestParam(value = "categoryId",defaultValue = "0")Integer categoryId)

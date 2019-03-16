@@ -6,6 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import java.io.Serializable;
 //等返回值msg和data的结果为null的时候，就可以只返回status了
 //保证序列化json的时候如果是null的随想 key也会消失
+
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class ServerResponse<T> implements Serializable {
 

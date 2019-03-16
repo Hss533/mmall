@@ -71,7 +71,6 @@ public class UserController {
     //获取用户登录信息
     public ServerResponse<User> getUserInfo(HttpSession session)
     {
-
         User user=(User)session.getAttribute(Const.CURRENT_USE);
         if(user!=null)
         {

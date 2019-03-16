@@ -8,7 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
-public class TokenCache {
+public class TokenCache
+{
     private static Logger  logger= LoggerFactory.getLogger(TokenCache.class);
     public static String TOKEN_PREFIX="token_";
     //声明静态的内存块，等号后买你的就是构建本地cache initialCapacity设置缓存的初始化容量 maximumSize缓存的最大容量 移除缓存项 expireAfterAccess设置有效期
@@ -27,15 +28,16 @@ public class TokenCache {
     public static String getKey(String key)
     {
         String value=null;
-        try{
-
+        try
+        {
             value=loadingCache.get(key);
             if("null".equals(value))
             {
                 return null;
             }
             return value;
-        }catch (Exception e){
+        }catch (Exception e)
+        {
             logger.error("localCache get error",e);
         }
         return null;

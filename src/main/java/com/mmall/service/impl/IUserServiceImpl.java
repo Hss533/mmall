@@ -32,7 +32,6 @@ public class IUserServiceImpl implements IUserService
         {
             return ServerResponse.createByErrorMessage("用户名不存在");
         }
-
         //todo 用户名和密码 在登录的时候比较的时加密后的密码
         User user=userMapper.selectLogin(username,MD5Util.MD5EncodeUtf8(password));
         if(user==null)
@@ -44,39 +43,42 @@ public class IUserServiceImpl implements IUserService
 
     }
 
-
+    /**
+     * 注册
+     * @param user
+     * @return
+     */
     @Override
-    public ServerResponse<String> register(User user) {
-
-
+    public ServerResponse<String> register(User user)
+    {
         ServerResponse validResponse=this.check_vaild(user.getUsername(),Const.USERNAME);
         if(!validResponse.idSucsess())
         {
             return  validResponse;
         }
-
         validResponse=this.check_vaild(user.getUsername(),Const.EMAIl);
         if(!validResponse.idSucsess())
         {
             return  validResponse;
         }
-
         //使用枚举显得有点厚重 所以可以折中采用接口的方式
         user.setRole(Const.Role.ROLE_CUSTOMER);
-
         //接下来时MD5加密
-
         user.setPassword(MD5Util.MD5EncodeUtf8(user.getPassword()));
         int resultCount=userMapper.insert(user);
         if(resultCount==0)
         {
             return ServerResponse.createByErrorMessage("注册失败");
         }
-
         return ServerResponse.createBySuccessMessage("注册成功");
-
     }
 
+    /**
+     * 用户进行验证
+     * @param str
+     * @param type
+     * @return
+     */
     @Override
     public ServerResponse<String> check_vaild(String str, String type) {
         int resultCount=0;
@@ -89,9 +91,9 @@ public class IUserServiceImpl implements IUserService
                 if(resultCount>0)
                 {
                     return ServerResponse.createByErrorMessage("用户名已经存在");
-
                 }
-                else {
+                else
+                {
                     return ServerResponse.createBySuccessMessage("校验正确,用户名未存在");
                 }
             }
@@ -113,7 +115,8 @@ public class IUserServiceImpl implements IUserService
     }
 
     @Override
-    public ServerResponse<String> selectQuestion(String username) {
+    public ServerResponse<String> selectQuestion(String username)
+    {
         //检查用户名是否存在
         ServerResponse validResponse=this.check_vaild(username,Const.USERNAME);
         if(validResponse.idSucsess())
@@ -130,7 +133,8 @@ public class IUserServiceImpl implements IUserService
     }
 
     @Override
-    public ServerResponse<String> forgetCheckAnswer(String username, String question, String answer) {
+    public ServerResponse<String> forgetCheckAnswer(String username, String question, String answer)
+    {
         int resultCount=userMapper.checkAnswer(username,question,answer);
         if(resultCount>0)
         {
@@ -141,22 +145,21 @@ public class IUserServiceImpl implements IUserService
             return  ServerResponse.createBySuccess(forgetToken);
         }
         return  ServerResponse.createByErrorMessage("问题的答案错误");
-
     }
 
     /**
-     * 充值密码操作
+     * 重置密码操作
      * @param username
      * @param password
      * @param forgetToken
      * @return
      */
     @Override
-    public ServerResponse<String> forgetResetPassword(String username, String password, String forgetToken) {
+    public ServerResponse<String> forgetResetPassword(String username, String password, String forgetToken)
+    {
         if(StringUtils.isBlank(forgetToken))
         {
             return ServerResponse.createByErrorMessage("参数错误,token需要传递");
-
         }
         ServerResponse validResponse=this.check_vaild(username,Const.USERNAME);
         if(validResponse.idSucsess())
@@ -187,7 +190,8 @@ public class IUserServiceImpl implements IUserService
     }
 
     @Override
-    public ServerResponse<String> resetPassword(String passwordOld, String passwordNew, User user) {
+    public ServerResponse<String> resetPassword(String passwordOld, String passwordNew, User user)
+    {
         //这个User防止横向越权，要校验一下用户的旧密码，一定要指定是这个用户
         int resultCount=userMapper.checkPassword(MD5Util.MD5EncodeUtf8(passwordOld),user.getId());
         if(resultCount==0)
@@ -267,7 +271,7 @@ public class IUserServiceImpl implements IUserService
     @Override
     public ServerResponse idAdminAndIsNotnull(User user) {
 
-        if(user!=null)
+        if(user==null)
         {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"未登录需要登录");
         }

@@ -20,7 +20,7 @@ public class UserManagerController {
 
     //登录成功之后要返回登录信息
     @RequestMapping(value = "login.do",method = RequestMethod.POST)
-    @ResponseBody
+    @ResponseBody //返回的时候自动序列化成JSON
     public ServerResponse<User> login(String username, String password, HttpSession session)
     {
         ServerResponse<User> response=iUserService.login(username,password);
