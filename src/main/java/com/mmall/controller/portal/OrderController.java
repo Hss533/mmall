@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +34,12 @@ public class OrderController
     private IOrderService orderService;
 
 
-    //创建订单
+    /**
+     * 创建订单
+     * @param session
+     * @param shippingId
+     * @return
+     */
     @RequestMapping(value = "create.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse create(HttpSession session,Integer shippingId)
@@ -43,10 +49,73 @@ public class OrderController
         {
             return  ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
-        return null;
+        return orderService.createOrder(user.getId(),shippingId);
+        //创建订单的时候要选择收货地址
     }
 
+    /**
+     * 取消订单
+     * @param session
+     * @param orderNo
+     * @return
+     */
+    //生成订单ID 是个比较麻烦的  不能让别人可以根据你的订单ID 判断你的网站流量
+    @RequestMapping("cancel.do")
+    @ResponseBody
+    public ServerResponse cancel(HttpSession session,Long orderNo)
+    {
+        User user=(User ) session.getAttribute(Const.CURRENT_USE);
+        if(user==null)
+        {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return orderService.cancel(user.getId(),orderNo);
+    }
+    //用户假如说是添加了10件在购物车里，但是只买了5件 要把五件保存在购物车中
+    @RequestMapping("get_order_cart_product.do")
+    @ResponseBody
+    public ServerResponse getOrderCartProduct(HttpSession session)
+    {
+        User user=(User ) session.getAttribute(Const.CURRENT_USE);
+        if(user==null)
+        {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return orderService.getOrderCartProduct(user.getId());
+    }
 
+    //前台订单列表
+
+    /**
+     * 订单详情列表
+     * @param session
+     * @return
+     */
+    @RequestMapping("detail.do")
+    @ResponseBody
+    public ServerResponse detail(HttpSession session,Long orderNo)
+    {
+        User user=(User ) session.getAttribute(Const.CURRENT_USE);
+        if(user==null)
+        {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return orderService.getOrderDatail(user.getId(),orderNo);
+    }
+
+    @RequestMapping("list.do")
+    @ResponseBody
+    public ServerResponse list(HttpSession session,
+                               @RequestParam(value = "pageNum",defaultValue = "10")int pageNum,
+                               @RequestParam(value = "pageNum",defaultValue = "1")int pageSize)
+    {
+        User user=(User ) session.getAttribute(Const.CURRENT_USE);
+        if(user==null)
+        {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return orderService.getOrderList(user.getId(),pageNum,pageSize);
+    }
 
 
 
@@ -157,12 +226,6 @@ public class OrderController
 
     }
 
-    /**
-     * 查询订单的状态
-     * @param session
-     * @param orderNo
-     * @return
-     */
     @RequestMapping(value = "order_status.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse orderStatus(HttpSession session,Long orderNo)
@@ -179,5 +242,4 @@ public class OrderController
         }
         return ServerResponse.createBySuccess(false);
     }
-
 }
