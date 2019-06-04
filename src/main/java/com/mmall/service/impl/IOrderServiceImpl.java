@@ -101,8 +101,8 @@ public class IOrderServiceImpl implements IOrderService
         }
         List<OrderItem> orderItemList = (List<OrderItem>)serverResponse.getData();
         BigDecimal payment = this.getOrderTotalPrice(orderItemList);
-        //生成订单
 
+        //生成订单
         Order order = this.assembleOrder(userId,shippingId,payment);
         if(order == null)
         {
@@ -582,21 +582,6 @@ public class IOrderServiceImpl implements IOrderService
         }
         return ServerResponse.createByErrorMessage("订单不存在");
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
 

@@ -260,6 +260,5 @@ public class IProductServiceImpl implements IProductService {
         PageInfo pageInfo = new PageInfo(productList);
         pageInfo.setList(productListVoList);
         return ServerResponse.createBySuccess(pageInfo);
-      //  return null;
     }
 }

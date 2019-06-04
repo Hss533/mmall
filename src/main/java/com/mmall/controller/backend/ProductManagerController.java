@@ -173,6 +173,7 @@ public class ProductManagerController {
             fileMap.put("uri",targetFileNamr);
             fileMap.put("url",url);
             return  ServerResponse.createBySuccess(fileMap);
+            //上传成功之后返回file的地址和名称
         }
         else return ServerResponse.createByErrorMessage("无权限操作");
 

@@ -44,7 +44,7 @@ public class ICartServiceImpl implements ICartService
         if(productId!=null)
         product=productMapper.selectByPrimaryKey(productId);
         //如果商品不存在，商品不在销售状态，要添加的商品数量<=0
-        if(product==null ||count==null||product.getStatus()!=Const.ProductStatus.ON_SALE||count<=0)
+        if(product==null ||count==null||product.getStatus()!=Const.ProductStatusEnum.ON_SALE.getCode()||count<=0)
         {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
@@ -84,7 +84,7 @@ public class ICartServiceImpl implements ICartService
         {
             product=productMapper.selectByPrimaryKey(productId);
         }
-        if(productId==null ||count==null||product==null||product.getStatus()!=Const.ProductStatus.ON_SALE||count<=0)
+        if(productId==null ||count==null||product==null||product.getStatus()!=Const.ProductStatusEnum.ON_SALE.getCode()||count<=0)
         {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }

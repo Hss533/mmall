@@ -94,7 +94,7 @@ public class FTPUtil {
                 ftpClient.setBufferSize(1024);
                 ftpClient.setControlEncoding("UTF-8");
                 ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);//设置文件类型为二进制文件 防止乱码
-                ftpClient.enterLocalPassiveMode();// todo  打开本地的被动模式
+                ftpClient.enterLocalPassiveMode();// todo   打开本地的被动模式
                 //上传多个文件
                 for(File fileItem : fileList){
                     fileInputStream = new FileInputStream(fileItem);
