@@ -79,7 +79,8 @@ public class IUserServiceImpl implements IUserService {
                 if (resultCount > 0) {
                     return ServerResponse.createByErrorMessage("用户名已经存在");
                 } else {
-                    return ServerResponse.createBySuccessMessage("校验正确,用户名未存在");
+                    resultCount+=1;
+                    //return ServerResponse.createBySuccessMessage("校验正确,用户名未存在");
                 }
             }
             if (Const.EMAIl.equals(type)) {
@@ -87,9 +88,20 @@ public class IUserServiceImpl implements IUserService {
                 if (resultCount > 0) {
                     return ServerResponse.createByErrorMessage("邮箱已经存在");
                 } else {
-                    return ServerResponse.createBySuccessMessage("校验正确,邮箱未存在");
+                    resultCount+=2;
+                    //return ServerResponse.createBySuccessMessage("校验正确,邮箱未存在");
                 }
             }
+            if(resultCount==3){
+                return ServerResponse.createBySuccessMessage("校验正确");
+            }
+            else if(resultCount==1){
+                return ServerResponse.createByErrorMessage("邮箱已经存在");
+            }
+            else if(resultCount==2){
+                return ServerResponse.createByErrorMessage("用户名已存在");
+            }
+            else
             return ServerResponse.createByErrorMessage("参数错误");
         } else
             return ServerResponse.createByErrorMessage("参数错误");
