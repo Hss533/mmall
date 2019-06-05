@@ -47,7 +47,7 @@ public class IUserServiceImpl implements IUserService {
         if (!validResponse.idSucsess()) {
             return validResponse;
         }
-        validResponse = this.check_vaild(user.getUsername(), Const.EMAIl);
+        validResponse = this.check_vaild(user.getEmail(), Const.EMAIl);
         if (!validResponse.idSucsess()) {
             return validResponse;
         }
@@ -78,30 +78,20 @@ public class IUserServiceImpl implements IUserService {
                 resultCount = userMapper.checkUsername(str);
                 if (resultCount > 0) {
                     return ServerResponse.createByErrorMessage("用户名已经存在");
-                } else {
-                    resultCount+=1;
-                    //return ServerResponse.createBySuccessMessage("校验正确,用户名未存在");
+                }
+                else {
+                    return ServerResponse.createBySuccessMessage("用户名未注册");
                 }
             }
             if (Const.EMAIl.equals(type)) {
                 resultCount = userMapper.checkEmail(str);
                 if (resultCount > 0) {
                     return ServerResponse.createByErrorMessage("邮箱已经存在");
-                } else {
-                    resultCount+=2;
-                    //return ServerResponse.createBySuccessMessage("校验正确,邮箱未存在");
+                }
+                else {
+                    return  ServerResponse.createBySuccessMessage("邮箱未注册");
                 }
             }
-            if(resultCount==3){
-                return ServerResponse.createBySuccessMessage("校验正确");
-            }
-            else if(resultCount==1){
-                return ServerResponse.createByErrorMessage("邮箱已经存在");
-            }
-            else if(resultCount==2){
-                return ServerResponse.createByErrorMessage("用户名已存在");
-            }
-            else
             return ServerResponse.createByErrorMessage("参数错误");
         } else
             return ServerResponse.createByErrorMessage("参数错误");
