@@ -39,4 +39,6 @@ public class UserManagerController {
         }
         return response;
     }
+    //TODO 管理员相当于是商户  普通用户相当于是消费者
+
 }
