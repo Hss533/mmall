@@ -133,7 +133,7 @@ public class ProductManagerController {
      * @param session
      * @return
      */
-    @RequestMapping("search.do")
+    @RequestMapping(value = "search.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse productSearch(HttpSession session,
                                         @RequestParam(value = "pageNum",defaultValue = "1") int pageNum,
@@ -156,7 +156,7 @@ public class ProductManagerController {
      * 上传图片
      * @return
      */
-    @RequestMapping("upload.do")
+    @RequestMapping(value = "upload.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse upload(HttpSession session,@RequestParam(value = "upload_file",required = false)MultipartFile file, HttpServletRequest request)
     {
@@ -180,7 +180,7 @@ public class ProductManagerController {
     }
 
     //富文本上传
-    @RequestMapping("richtext_img_upload.do")
+    @RequestMapping(value = "richtext_img_upload.do",method = RequestMethod.POST)
     @ResponseBody
     public Map upload(HttpSession session,
                       @RequestParam(value = "upload_file",required = false) MultipartFile file,
