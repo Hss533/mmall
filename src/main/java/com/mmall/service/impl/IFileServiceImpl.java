@@ -38,7 +38,7 @@ public class IFileServiceImpl  implements IFileService
             //文件已经上传成功了
             //todo 将targetFile上传到我们的ftp服务器上
             FTPUtil.uploadFile(Lists.newArrayList(targetFile));//使用gava缓存
-//已经上传到服务器上了
+            //已经上传到服务器上了
             //todo 上传完之后，删除upload下的文件
             targetFile.delete();
 

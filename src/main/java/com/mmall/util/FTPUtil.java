@@ -114,11 +114,18 @@ public class FTPUtil {
     }
     private boolean connectServer(String ip,int port,String user,String pwd)
     {
+        System.out.println("ip"+ip);
+        System.out.println("user"+user);
+        System.out.println("port"+port);
+        System.out.println("pwd"+pwd);
         boolean isSuccess=false;
         ftpClient=new FTPClient();
         try{
             ftpClient.connect(ip,port);
+            System.out.println("userName="+user);
+            System.out.println("pwd"+pwd);
             isSuccess=ftpClient.login(user,pwd);
+
         }catch (IOException e)
         {
             logger.error("连接ftp服务器异常",e);
