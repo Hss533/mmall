@@ -86,14 +86,14 @@ public class FTPUtil {
     private boolean uploadFile(String remotePath,List<File> fileList) throws  IOException
     {
         boolean upload=true;
-        logger.info("ahhhhh");
+        logger.error("ahhhhh");
         FileInputStream fileInputStream=null;
-        logger.info("emmmmmm");
+        logger.error("emmmmmm");
         //连接ftp服务器
         if(connectServer(this.ip,this.port,this.user,this.pwd))
         {
             try {
-                logger.info("hushashahushasha");
+                logger.error("hushashahushasha");
                 ftpClient.changeWorkingDirectory(remotePath);
                 ftpClient.setBufferSize(1024);
                 ftpClient.setControlEncoding("UTF-8");
