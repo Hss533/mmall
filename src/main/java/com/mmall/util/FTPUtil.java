@@ -122,8 +122,8 @@ public class FTPUtil {
         ftpClient=new FTPClient();
         try{
             ftpClient.connect(ip,port);
-            System.out.println("userName="+user);
-            System.out.println("pwd"+pwd);
+            logger.info("userName="+user);
+            logger.info("pwd"+pwd);
             isSuccess=ftpClient.login(user,pwd);
 
         }catch (IOException e)
