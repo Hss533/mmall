@@ -111,7 +111,8 @@ public class FTPUtil {
                 fileInputStream.close();
                 ftpClient.disconnect();//释放连接
             }
-        }
+        }else
+            return false;
         return  upload;
     }
     private boolean connectServer(String ip,int port,String user,String pwd)
