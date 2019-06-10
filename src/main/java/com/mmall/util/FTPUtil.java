@@ -77,8 +77,7 @@ public class FTPUtil {
     public static boolean uploadFile(List<File> fileList) throws IOException
     {
         FTPUtil ftpUtil=new FTPUtil(ftpIp,21,ftpUser,ftpPass);
-        logger.info("开始连接ftp服务器hss");
-        logger.info("filelist是{}",fileList);
+        logger.info("开始连接ftp服务器");
         boolean result=ftpUtil.uploadFile("img",fileList);
         logger.info("开始连接ftp服务器，结束上传，上传结果{}",result);
         return result;
@@ -87,14 +86,11 @@ public class FTPUtil {
     private boolean uploadFile(String remotePath,List<File> fileList) throws  IOException
     {
         boolean upload=true;
-        logger.error("ahhhhh");
         FileInputStream fileInputStream=null;
-        logger.error("emmmmmm");
         //连接ftp服务器
         if(connectServer(this.ip,this.port,this.user,this.pwd))
         {
             try {
-                logger.error("hushashahushasha");
                 ftpClient.changeWorkingDirectory(remotePath);
                 ftpClient.setBufferSize(1024);
                 ftpClient.setControlEncoding("UTF-8");

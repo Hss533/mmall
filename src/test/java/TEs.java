@@ -8,10 +8,10 @@ public class TEs {
         boolean isSuccess=false;
         FTPClient ftpClient=new FTPClient();
         try{
-            ftpClient.connect("127.0.0.1",21);
-            isSuccess=ftpClient.login("hss","533533");
+            ftpClient.connect("39.105.84.39",21);
+            isSuccess=ftpClient.login("ftpuser","533533");
 
-        }catch (IOException e)
+        }catch (Exception e)
         {
             System.out.println("连接ftp服务器异常");
         }
