@@ -1,6 +1,7 @@
 package com.mmall.util;
 
 import org.apache.commons.net.ftp.FTPClient;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,6 +100,7 @@ public class FTPUtil {
                 ftpClient.setControlEncoding("UTF-8");
                 ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);//设置文件类型为二进制文件 防止乱码
                 ftpClient.enterLocalPassiveMode();// todo   打开本地的被动模式
+
                 //上传多个文件
                 for(File fileItem : fileList){
                     fileInputStream = new FileInputStream(fileItem);
