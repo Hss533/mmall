@@ -2,7 +2,7 @@ import org.apache.commons.net.ftp.FTPClient;
 
 import java.io.IOException;
 
-public class TEs {
+public class Test {
     public static void main(String[] args) {
 
         boolean isSuccess=false;
