@@ -11,6 +11,11 @@ public class Const {
     public static  final String CURRENT_USE="currentUser";
     public static final String EMAIl="email";
     public static final String USERNAME="username";
+
+    public interface  RedisCachneExtime
+    {
+        int REDIS_SESSION_SETIME=60*30;
+    }
     public interface ProductListOrderBy{
         Set<String> PRICE_ASC_DESC = Sets.newHashSet("price_desc","price_asc");
     }

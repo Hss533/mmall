@@ -1,7 +1,15 @@
 package com.mmall.pojo;
 
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.Date;
+@Data
+//@Slf4j
+//@EqualsAndHashCode(of = "id")
 public class Cart {
     private Integer id;
 
