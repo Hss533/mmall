@@ -15,7 +15,9 @@ public class Const {
     public interface  RedisCachneExtime
     {
         int REDIS_SESSION_SETIME=60*30;
+        int REDIS_FORGETTOKEN_SETIME=60*60*12;
     }
+
     public interface ProductListOrderBy{
         Set<String> PRICE_ASC_DESC = Sets.newHashSet("price_desc","price_asc");
     }

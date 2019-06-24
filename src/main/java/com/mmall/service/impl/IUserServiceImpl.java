@@ -8,6 +8,7 @@ import com.mmall.dao.UserMapper;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
 import com.mmall.util.MD5Util;
+import com.mmall.util.RedisPoolUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -113,6 +114,13 @@ public class IUserServiceImpl implements IUserService {
         return ServerResponse.createByErrorMessage("找回密码的问题不存在");
     }
 
+    /**
+     * 第二期吧check
+     * @param username
+     * @param question
+     * @param answer
+     * @return
+     */
     @Override
     public ServerResponse<String> forgetCheckAnswer(String username, String question, String answer) {
         int resultCount = userMapper.checkAnswer(username, question, answer);
@@ -120,7 +128,9 @@ public class IUserServiceImpl implements IUserService {
             //说明这个判断正确，是本人的问题及问题的答案
             String forgetToken = UUID.randomUUID().toString();
             //把这个forgetoken放到本地token中
-            TokenCache.setKey(TokenCache.TOKEN_PREFIX + username, forgetToken);
+            //TokenCache.setKey(TokenCache.TOKEN_PREFIX + username, forgetToken);
+            //二期就不能把这个放到本地了  要放到Redis中
+            RedisPoolUtil.setEx(TokenCache.TOKEN_PREFIX + username,forgetToken,Const.RedisCachneExtime.REDIS_FORGETTOKEN_SETIME);
             return ServerResponse.createBySuccess(forgetToken);
         }
         return ServerResponse.createByErrorMessage("问题的答案错误");
@@ -144,7 +154,8 @@ public class IUserServiceImpl implements IUserService {
             //用户不存在
             return ServerResponse.createByErrorMessage("用户不存在");
         }
-        String token = TokenCache.getKey(TokenCache.TOKEN_PREFIX + username);
+//      String token = TokenCache.getKey(TokenCache.TOKEN_PREFIX + username);
+        String token=RedisPoolUtil.get(TokenCache.TOKEN_PREFIX + username);
         if (StringUtils.isBlank(token)) {
             return ServerResponse.createByErrorMessage("token无效或者token过期了");
         }

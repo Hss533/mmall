@@ -7,13 +7,18 @@ import com.mmall.common.ServerResponse;
 import com.mmall.pojo.User;
 import com.mmall.service.IOrderService;
 import com.mmall.service.IUserService;
+import com.mmall.util.CookieUtil;
+import com.mmall.util.JsonUtil;
+import com.mmall.util.RedisPoolUtil;
 import com.mmall.vo.OrderVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import  java.lang.Math;
 @Controller
@@ -29,11 +34,17 @@ public class OrderManagerController
 
     @RequestMapping("order_list.do")
     @ResponseBody
-    public ServerResponse<PageInfo> orderList(HttpSession session,
+    public ServerResponse<PageInfo> orderList(HttpServletRequest request,
                                               @RequestParam(value = "pageNum",defaultValue = "1")int pageNum,
                                               @RequestParam(value = "pageSize",defaultValue = "10")int pageSize)
     {
-        User currentUser=(User) session.getAttribute(Const.CURRENT_USE);
+        String loginToken= CookieUtil.readLoginToken(request);
+        if(StringUtils.isEmpty(loginToken))
+        {
+            return ServerResponse.createByErrorMessage("用户未登录,无法获取当前用户的信息");
+        }
+        String userJson= RedisPoolUtil.get(loginToken);
+        User currentUser= JsonUtil.string2Object(userJson,User.class);
         if(currentUser==null)
         {
             return  ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登录管理员");
@@ -49,9 +60,15 @@ public class OrderManagerController
     }
     @RequestMapping("detail.do")
     @ResponseBody
-    public ServerResponse<OrderVo> detail(HttpSession session, Long orderNo)
+    public ServerResponse<OrderVo> detail(HttpServletRequest request, Long orderNo)
     {
-        User currentUser=(User) session.getAttribute(Const.CURRENT_USE);
+        String loginToken= CookieUtil.readLoginToken(request);
+        if(StringUtils.isEmpty(loginToken))
+        {
+            return ServerResponse.createByErrorMessage("用户未登录,无法获取当前用户的信息");
+        }
+        String userJson= RedisPoolUtil.get(loginToken);
+        User currentUser= JsonUtil.string2Object(userJson,User.class);
         if(currentUser==null)
         {
             return  ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登录管理员");
@@ -68,13 +85,18 @@ public class OrderManagerController
     //为以后的分页查询做打算
     @RequestMapping("search.do")
     @ResponseBody
-    public ServerResponse search(HttpSession session,
+    public ServerResponse search(HttpServletRequest request,
                                  Long orderNum,
                                  @RequestParam(value = "pageNum",defaultValue = "1")int pageNum,
                                  @RequestParam(value = "pageSize",defaultValue = "10")int pageSize)
     {
-        User currentUser=(User) session.getAttribute(Const.CURRENT_USE);
-        if(currentUser==null)
+        String loginToken= CookieUtil.readLoginToken(request);
+        if(StringUtils.isEmpty(loginToken))
+        {
+            return ServerResponse.createByErrorMessage("用户未登录,无法获取当前用户的信息");
+        }
+        String userJson= RedisPoolUtil.get(loginToken);
+        User currentUser= JsonUtil.string2Object(userJson,User.class); if(currentUser==null)
         {
             return  ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登录管理员");
         }
@@ -91,9 +113,15 @@ public class OrderManagerController
 
     @RequestMapping("send_goods.do")
     @ResponseBody
-    public ServerResponse sendGoods(HttpSession session,Long orderNum)
+    public ServerResponse sendGoods(HttpServletRequest request,Long orderNum)
     {
-        User currentUser=(User) session.getAttribute(Const.CURRENT_USE);
+        String loginToken= CookieUtil.readLoginToken(request);
+        if(StringUtils.isEmpty(loginToken))
+        {
+            return ServerResponse.createByErrorMessage("用户未登录,无法获取当前用户的信息");
+        }
+        String userJson= RedisPoolUtil.get(loginToken);
+        User currentUser= JsonUtil.string2Object(userJson,User.class);
         if(currentUser==null)
         {
             return  ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登录管理员");
