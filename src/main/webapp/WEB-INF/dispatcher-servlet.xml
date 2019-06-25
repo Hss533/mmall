@@ -9,7 +9,10 @@
 	http://www.springframework.org/schema/mvc/spring-mvc.xsd">
     <!--这个文件在这以及它的名称是这个的原因是采用了默认的 如果不这样的话要在web.xml文件中进行配置-->
 
-    <context:component-scan base-package="com.mmall" annotation-config="true"/>
+    <!--默认的扫描不扫了，但是一定会扫描controller-->
+    <context:component-scan base-package="com.mmall" annotation-config="true" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
 
     <mvc:annotation-driven>
         <mvc:message-converters>
@@ -21,7 +24,7 @@
                     </list>
                 </property>
             </bean>
-            <!--springMVC进行自动反序列化时的  这个还不是很懂-->
+            <!--springMVC进行自动反序列化时的，这个还不是很懂-->
             <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
                 <property name="supportedMediaTypes">
                     <list>
