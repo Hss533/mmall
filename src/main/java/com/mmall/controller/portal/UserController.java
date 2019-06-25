@@ -46,10 +46,10 @@ public class UserController {
        ServerResponse<User> response=iUserService.login(username,password);
        if(response.idSucsess())
        {
-           CookieUtil.writeLoginToken(httpServletResponse,session.getId());
+         CookieUtil.writeLoginToken(httpServletResponse,session.getId());
 //         CookieUtil.readLoginToken(httpServletRequest);
 //         CookieUtil.delLoginToken(httpServletRequest,httpServletResponse);
-//         session.setAttribute(Const.CURRENT_USE,response.getData());
+         session.setAttribute(Const.CURRENT_USE,response.getData());
            RedisPoolUtil.setEx(session.getId(), JsonUtil.obj2String(response.getData()),Const.RedisCachneExtime.REDIS_SESSION_SETIME);
        }
        return response;
