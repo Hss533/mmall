@@ -30,10 +30,12 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequestMapping("/manage/category")
 public class CategoryManageController {
 
+    //TODO Autowired 和resources有什么区别吗？
     @Autowired
     private IUserService iUserService;
     @Autowired
     private ICategoryService iCategoryService;
+
     /**
      * 增加商品种类
      * @param request

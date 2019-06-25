@@ -12,13 +12,14 @@
     <!--配置扫描包下的注解--><!--对已经注册的bean进行注册的配置-->
     <context:component-scan base-package="com.mmall" annotation-config="true">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
-        <!--这个是排除controller注解-->
+        <!--这个是排除controller注解，因为在spring MVC的文件中已经写入了controller-->
     </context:component-scan>
 
     <!--<context:annotation-config/>-->
     <!--这个和上面的注解作用差不多-->
 
     <!--将当前的spring配置文件进行分离-->
+    <!--TODO 这个是用来干什么的？？-->
     <aop:aspectj-autoproxy/>
 
 

@@ -23,6 +23,7 @@
     </bean>
 
 
+    <!--由于选择的是dev，所以会加载dev下的-->
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${db.driverClassName}"/>
         <property name="url" value="${db.url}"/>

@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 	http://www.springframework.org/schema/mvc
 	http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
     <!--这个文件在这以及它的名称是这个的原因是采用了默认的 如果不这样的话要在web.xml文件中进行配置-->
+
 
     <!--默认的扫描不扫了，但是一定会扫描controller-->
     <context:component-scan base-package="com.mmall" annotation-config="true" use-default-filters="false">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
+    <!--TODO 查一下这两个是什么意思？？-->
     <mvc:annotation-driven>
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
@@ -24,7 +27,7 @@
                     </list>
                 </property>
             </bean>
-            <!--springMVC进行自动反序列化时的，这个还不是很懂-->
+            <!--springMVC进行自动反序列化时的这个还不是很懂,如果使用的jack是2.*的话就可以使用.MappingJackson2HttpMessageConverter-->
             <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
                 <property name="supportedMediaTypes">
                     <list>
@@ -35,9 +38,8 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
-
-
     <!-- 文件上传 -->
+    <!--TODO 所以为什么文件上传的bean要放到spring MVC的配置文件中？？-->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="maxUploadSize" value="10485760"/> <!-- 10m -->
         <property name="maxInMemorySize" value="4096" />
@@ -45,4 +47,17 @@
     </bean>
 
 
+    <!--
+        <mvc:mapping path="/**">代表所有路径及里面的子路径
+        /*当前路径下的所有路径，不含子路径
+        /  表示web项目的根目录请求
+     -->
+    <mvc:interceptors>
+        <!--定义在这里的所有的都会拦截-->
+        <mvc:interceptor>
+            <mvc:mapping path="/manage/**"/>
+            <!--<mvc:exclude-mapping path=""/>-->
+            <bean class="com.mmall.controller.common.interceptor.AuthorityInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>
