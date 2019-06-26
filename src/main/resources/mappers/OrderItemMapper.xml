@@ -190,6 +190,16 @@
   </insert>
 
 
+  <select id="selectOrderStatusByCreateTime" resultMap="BaseResultMap" parameterType="map">
+    SELECT <include refid="com.mmall.dao.OrderMapper.Base_Column_List"/>
+    FOR mmal_order where status=#{status}
+    and create_time &lt;= #{date}
+    order by create_time desc
+  </select>
 
-
+  <update id="closeOrderByOrderId" parameterType="int">
+    UPDATE  mmall_order
+    SET status=0
+    WHERE  id=#{id}
+  </update>
 </mapper>

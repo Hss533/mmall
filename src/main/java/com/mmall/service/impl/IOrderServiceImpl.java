@@ -28,6 +28,7 @@ import com.mmall.vo.OrderProductVo;
 import com.mmall.vo.OrderVo;
 import com.mmall.vo.ShippingVo;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -570,6 +571,36 @@ public class IOrderServiceImpl implements IOrderService
             }
         }
         return ServerResponse.createByErrorMessage("订单不存在");
+    }
+
+    @Override
+    public void closeOrder(int hour) {
+        //当前时间hour前的下单
+        Date closeDateTime= DateUtils.addHours(new Date(),-hour);
+
+        List<Order> orderList=orderItemMapper.selectOrderStatusByCreateTime(Const.OrderStatusEnum.NO_PAY.getCode(),DateTimeUtil.dateToStr(closeDateTime));
+        for(Order order : orderList)
+        {
+            List<OrderItem> orderItemList=orderItemMapper.getByOrderNo(order.getOrderNo());
+            for(OrderItem orderItem:orderItemList){
+                //一定要用主键where条件防止锁表 innodb 事务没有深入
+                Integer stock=productMapper.selectStockByProductId(orderItem.getProductId());
+
+                //考虑到已生成订单里的商品被删除的情况
+                if(stock==null){
+                    continue;
+                }
+
+                Product product=new Product();
+                product.setId(orderItem.getProductId());
+                product.setStock(stock+orderItem.getQuantity());
+                productMapper.updateByPrimaryKeySelective(product);
+
+            }
+
+        orderItemMapper.closeOrderByOrderId(order.getId());
+            log.info("关闭订单orderNo:{}",order.getId());
+        }
     }
 
 }

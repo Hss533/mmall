@@ -22,4 +22,6 @@ public interface IProductService {
 
     //进行搜索 涉及分页操作
     ServerResponse<PageInfo> getProductByKeywordCategory(String keyWord,Integer categoryId,int pageNum,int pageSize,String orderBy);
+
+
 }

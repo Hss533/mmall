@@ -4,6 +4,7 @@ import com.mmall.pojo.Order;
 import com.mmall.pojo.OrderItem;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface OrderItemMapper {
@@ -25,5 +26,9 @@ public interface OrderItemMapper {
 
     void batchInsert(@Param("orderItemList") List<OrderItem> orderItemList);
 
+    //二期新增加定时关闭订单
+    List<Order> selectOrderStatusByCreateTime(@Param("status")Integer status, @Param("date")String date);
 
+
+    int closeOrderByOrderId(Integer id);
 }
