@@ -1,5 +1,6 @@
 package com.mmall.controller.common.interceptor;
 
+import com.google.common.collect.Maps;
 import com.mmall.common.Const;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.User;
@@ -28,7 +29,7 @@ public class AuthorityInterceptor implements HandlerInterceptor{
         log.info("preHandler");
         HandlerMethod handlerMethod=(HandlerMethod) o;
         String  methodName=handlerMethod.getMethod().getName();
-        String className=handlerMethod.getBean().getClass().getName();
+        String className=handlerMethod.getBean().getClass().getSimpleName();
 
         //解析参数 key value
         StringBuffer requestParamBuffer=new StringBuffer();
@@ -55,6 +56,7 @@ public class AuthorityInterceptor implements HandlerInterceptor{
             //如果拦截到登录请求 不打印参数 因为参数中有密码 全部会打印到日志中，万一日志泄露了
             return true;
         }
+        log.info("权限拦截器拦截到请求 className:{},methodName:{} param:{}",className,methodName);
         User user=null;
         String loginToken= CookieUtil.readLoginToken(httpServletRequest);
         if(StringUtils.isNotEmpty(loginToken)){
@@ -73,13 +75,29 @@ public class AuthorityInterceptor implements HandlerInterceptor{
 
             PrintWriter out=httpServletResponse.getWriter();
 
-            if(user==null){
+            //上传由于富文本的空间要求 要特殊处理返回值 这里面区分是否登录  要还是否有权限
+            if(user==null)
+            {
+                if(StringUtils.equals(className,"ProductManageController") && StringUtils.equals(methodName,"richText_upload"))
+                {
+                    Map resultMap= Maps.newHashMap();
+                    resultMap.put("success",false);
+                    resultMap.put("msg","请登录管理员");
+                    out.print(JsonUtil.obj2String(resultMap));
+                }else {
+                    out.print(JsonUtil.obj2String(ServerResponse.createByErrorMessage("拦截器拦截，用户未登录")));
+                }
                 out.print(JsonUtil.obj2String(ServerResponse.createByErrorMessage("拦截器拦截，用户未登录")));
-
             }
             else {
+                if(StringUtils.equals(className,"ProductManageController") && StringUtils.equals(methodName,"richText_upload"))
+                {
+                    Map resultMap= Maps.newHashMap();
+                    resultMap.put("success",false);
+                    resultMap.put("msg","无权限操作");
+                    out.print(JsonUtil.obj2String(resultMap));
+                }
                 out.print(JsonUtil.obj2String(ServerResponse.createByErrorMessage("拦截器拦截，用户无权限操作")));
-
             }
             out.flush();
             out.close();

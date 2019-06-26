@@ -48,7 +48,7 @@ public class CategoryManageController {
         //defaultValue指的是前端传回来的值默认为0
         public ServerResponse addCategory(HttpServletRequest request,String categoryName,@RequestParam(value = "parent_id",defaultValue = "0") int parent_id)
         {
-            String loginToken= CookieUtil.readLoginToken(request);
+  /*          String loginToken= CookieUtil.readLoginToken(request);
             if(StringUtils.isEmpty(loginToken))
             {
                 return ServerResponse.createByErrorMessage("用户未登录,无法获取当前用户的信息");
@@ -68,9 +68,13 @@ public class CategoryManageController {
                    return response2;
                }
                else return response;
-           }
+           }*/
 
+
+           return iCategoryService.addCategory(categoryName,parent_id);
         }
+
+        //TODO  要改一下这些
         @RequestMapping(value = "update_category.do",method = RequestMethod.POST)
         @ResponseBody
         public ServerResponse updateCategoryName(HttpServletRequest request,Integer categoryId,String categoryName)

@@ -192,7 +192,7 @@ public class ProductManagerController {
     @ResponseBody
     public ServerResponse upload(HttpSession session,@RequestParam(value = "upload_file",required = false)MultipartFile file, HttpServletRequest request)
     {
-        String loginToken= CookieUtil.readLoginToken(request);
+        /*String loginToken= CookieUtil.readLoginToken(request);
         if(StringUtils.isEmpty(loginToken))
         {
             return ServerResponse.createByErrorMessage("用户未登录,无法获取当前用户的信息");
@@ -214,17 +214,26 @@ public class ProductManagerController {
             //上传成功之后返回file的地址和名称
         }
         else return ServerResponse.createByErrorMessage("无权限操作");
+*/
+        String path=request.getSession().getServletContext().getRealPath("upload");
+        //发布好之后，会在webApp同级穿件upload文件夹 创建文件夹，交给代码，不要自己去创建
+        String targetFileNamr=iFileService.upload(file,path);
+        String url= PropertiesUtil.getProperty("ftp.server.http.prefix")+targetFileNamr;
+        Map fileMap= Maps.newHashMap();
+        fileMap.put("uri",targetFileNamr);
+        fileMap.put("url",url);
+        return  ServerResponse.createBySuccess(fileMap);
 
     }
 
     //富文本上传
-    @RequestMapping(value = "richtext_img_upload.do",method = RequestMethod.POST)
+    @RequestMapping(value = "richText_img_upload.do",method = RequestMethod.POST)
     @ResponseBody
-    public Map upload(@RequestParam(value = "upload_file",required = false) MultipartFile file,
+    public Map richText_upload(@RequestParam(value = "upload_file",required = false) MultipartFile file,
                       HttpServletRequest request, HttpServletResponse servletresponse)
     {
         Map resultMap=new HashMap();
-        //登录问题
+        /*//登录问题
         String loginToken= CookieUtil.readLoginToken(request);
         if(StringUtils.isEmpty(loginToken))
         {
@@ -239,7 +248,6 @@ public class ProductManagerController {
             resultMap.put("msg","管理员请登录");
             return resultMap;
         }
-
 
         ServerResponse response;
         response=userService.idAdminAndIsNotnull(currentUser);
@@ -260,7 +268,22 @@ public class ProductManagerController {
             resultMap.put("success",false);
             resultMap.put("msg","无权限操作");
             return  resultMap;
+        }*/
+        String path=request.getSession().getServletContext().getRealPath("upload");
+        String targetFileNamr=iFileService.upload(file,path);
+        if(StringUtils.isBlank(targetFileNamr)) {
+            resultMap.put("success", true);
+            resultMap.put("msg", "上传失败");
+
+            return resultMap;
         }
+        String url= PropertiesUtil.getProperty("ftp.server.http.prefix")+targetFileNamr;
+        resultMap.put("success",true);
+        resultMap.put("msg","上传成功");
+        resultMap.put("file_path",url);
+        servletresponse.addHeader("Access-Control-Allow-Headers","X-File-Name");
+
+        return resultMap;
 
     }
 }

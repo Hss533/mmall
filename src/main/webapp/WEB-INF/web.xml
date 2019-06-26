@@ -76,9 +76,16 @@
 
 
 
+  <!--
   <servlet-mapping>
     <servlet-name>dispatcher</servlet-name>
     <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  -->
+  <!--改成这样，restful和非restful请求都行的-->
+  <servlet-mapping>
+      <servlet-name>dispatcher</servlet-name>
+      <url-pattern>/</url-pattern>
   </servlet-mapping>
 
 </web-app>

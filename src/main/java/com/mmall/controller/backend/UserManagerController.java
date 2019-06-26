@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 //TODO 改正session 改为redis相关的
@@ -25,7 +26,7 @@ public class UserManagerController {
     //登录成功之后要返回登录信息
     @RequestMapping(value = "login.do",method = RequestMethod.POST)
     @ResponseBody //返回的时候自动序列化成JSON
-    public ServerResponse<User> login(String username, String password, HttpServletResponse httpServletResponse, HttpSession session)
+    public ServerResponse<User> login(String username, String password, HttpServletResponse httpServletResponse, HttpSession session, HttpServletRequest request)
     {
         ServerResponse<User> response=iUserService.login(username,password);
         if(response.idSucsess())
