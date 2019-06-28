@@ -95,14 +95,21 @@ public class RedisShardedPoolUtil {
         return result;
     }
 
-    public static void main(String[] args) {
-        ShardedJedis jedis=RedisShardedPool.getJedis();
-        RedisShardedPoolUtil.set("ketTest","value");
-        String value= RedisShardedPoolUtil.get("keyTest");
+    public static Long setnx(String key,String value){
+        ShardedJedis jedis=null;
+        Long result=null;
 
-        RedisShardedPoolUtil.setEx("keyex","valueex",60*10);
-        RedisShardedPoolUtil.expire("keyTest",60*10);
-        RedisShardedPoolUtil.del("ketTest");
-        System.out.println("end");
+        try {
+            jedis = RedisShardedPool.getJedis();
+            result=jedis.setnx(key,value);
+        } catch (Exception e) {
+            log.error("setnx ket:{} value:{}",key,value);
+            RedisShardedPool.returnBrokenResources(jedis);
+            return result;
+        }
+        RedisShardedPool.returnResourses(jedis);
+        return result;
+
+
     }
 }
