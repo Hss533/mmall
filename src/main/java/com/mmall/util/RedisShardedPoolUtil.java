@@ -109,7 +109,22 @@ public class RedisShardedPoolUtil {
         }
         RedisShardedPool.returnResourses(jedis);
         return result;
+    }
 
+    //设置一个新值，但是要立刻拿到返回值。原子性的。
+    public static String getSet(String key,String value){
+        ShardedJedis jedis=null;
+        String result=null;
 
+        try {
+            jedis = RedisShardedPool.getJedis();
+            result=jedis.getSet(key,value);
+        } catch (Exception e) {
+            log.error("getSet ket:{} value:{}",key,value);
+            RedisShardedPool.returnBrokenResources(jedis);
+            return result;
+        }
+        RedisShardedPool.returnResourses(jedis);
+        return result;
     }
 }

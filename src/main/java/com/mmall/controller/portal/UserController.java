@@ -40,17 +40,17 @@ public class UserController {
     public ServerResponse<User> login(@RequestParam(value = "username",required = false) String username,
                                       String password,
                                       HttpSession session,
-                                      HttpServletResponse httpServletResponse)
+                                      HttpServletResponse httpServletResponse,HttpServletRequest httpServletRequest)
     {
         //如果将用户存到redis中去的话,要讲用户序列化成String,再存到redis中去。
        ServerResponse<User> response=iUserService.login(username,password);
        if(response.idSucsess())
        {
          CookieUtil.writeLoginToken(httpServletResponse,session.getId());
-//         CookieUtil.readLoginToken(httpServletRequest);
-//         CookieUtil.delLoginToken(httpServletRequest,httpServletResponse);
-         session.setAttribute(Const.CURRENT_USE,response.getData());
-           RedisPoolUtil.setEx(session.getId(), JsonUtil.obj2String(response.getData()),Const.RedisCachneExtime.REDIS_SESSION_SETIME);
+        /* CookieUtil.readLoginToken(httpServletRequest);
+         CookieUtil.delLoginToken(httpServletRequest,httpServletResponse);
+        */ session.setAttribute(Const.CURRENT_USE,response.getData());
+         RedisPoolUtil.setEx(session.getId(), JsonUtil.obj2String(response.getData()),Const.RedisCachneExtime.REDIS_SESSION_SETIME);
        }
        return response;
     }
@@ -198,10 +198,17 @@ public class UserController {
     //获取用户的详细信息
     @RequestMapping(value = "get_information.do",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<User> get_information(HttpSession session)
+    public ServerResponse<User> get_information(HttpServletRequest request )
     {
+        String loginToken= CookieUtil.readLoginToken(request);
+        if(StringUtils.isEmpty(loginToken))
+        {
+            return ServerResponse.createByErrorMessage("用户未登录,无法获取当前用户的信息");
+        }
+        String userJson= RedisPoolUtil.get(loginToken);
+        User currentUser= JsonUtil.string2Object(userJson,User.class);
         //如果调用这个接口用户没有登录  则强制登录
-        User currentUser=(User) session.getAttribute(Const.CURRENT_USE);
+        //User currentUser=(User) session.getAttribute(Const.CURRENT_USE);
 
         if(currentUser==null)
         {

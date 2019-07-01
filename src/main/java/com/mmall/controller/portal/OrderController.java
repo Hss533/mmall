@@ -205,7 +205,13 @@ public class OrderController
     @ResponseBody
     public ServerResponse pay(HttpSession session, Long orderNo, HttpServletRequest request)
     {
-        User user=(User)session.getAttribute(Const.CURRENT_USE);
+        String loginToken= CookieUtil.readLoginToken(request);
+        if(StringUtils.isEmpty(loginToken))
+        {
+            return ServerResponse.createByErrorMessage("用户未登录,无法获取当前用户的信息");
+        }
+        String userJson= RedisPoolUtil.get(loginToken);
+        User user= JsonUtil.string2Object(userJson,User.class);
         if(user==null)
         {
             return  ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
@@ -262,9 +268,15 @@ public class OrderController
 
     @RequestMapping(value = "order_status.do",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse orderStatus(HttpSession session,Long orderNo)
+    public ServerResponse orderStatus(HttpServletRequest request,Long orderNo)
     {
-        User user=(User) session.getAttribute(Const.CURRENT_USE);
+        String loginToken= CookieUtil.readLoginToken(request);
+        if(StringUtils.isEmpty(loginToken))
+        {
+            return ServerResponse.createByErrorMessage("用户未登录,无法获取当前用户的信息");
+        }
+        String userJson= RedisPoolUtil.get(loginToken);
+        User user= JsonUtil.string2Object(userJson,User.class);
         if(user==null)
         {
             return  ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());

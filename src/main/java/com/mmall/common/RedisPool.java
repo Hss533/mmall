@@ -18,8 +18,8 @@ public class RedisPool {
     private static boolean testOnReturn = Boolean.parseBoolean(PropertiesUtil.getProperty("redis.test.return", "true"));
     //还的时候
 
-    private static String redisIp = PropertiesUtil.getProperty("redis.ip");
-    private static Integer redisPort = Integer.parseInt(PropertiesUtil.getProperty("redis.port"));
+    private static String redisIp = PropertiesUtil.getProperty("redis1.ip");
+    private static Integer redisPort = Integer.parseInt(PropertiesUtil.getProperty("redis1.port"));
 
     static {
         initPool();
